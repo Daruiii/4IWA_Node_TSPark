@@ -12,7 +12,7 @@ export interface Gym {
     address: string;
     contact: string;
     description: string;
-    capcaity: number;
+    capacity: number;
     equipments: string[];
     activities: string[];
     owenerId: Types.ObjectId | string;

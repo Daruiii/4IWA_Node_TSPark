@@ -19,7 +19,7 @@ export function getGymSchema(): Schema<Gym> {
         type: String, 
         required: true 
     },
-      capcaity: { 
+      capacity: { 
         type: Number, 
         required: true 
     },
