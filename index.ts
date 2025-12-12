@@ -1,0 +1,27 @@
+import express, {Request, Response} from 'express';
+import {config} from 'dotenv';
+import {openMongooseConnection} from "./services/utils";
+import {UserController} from "./controllers";
+
+config({quiet: true});
+
+async function main() {
+    const conn = await openMongooseConnection();
+    console.log(`MongoDB connected: ${conn.connection.name}`);
+
+    const app = express();
+    const PORT = process.env.PORT || 3000;
+
+    app.get('/', (req: Request, res: Response) => {
+        res.json({message: 'TSPark API is running'});
+    });
+
+    const userController = new UserController();
+    app.use(userController.path, userController.buildRouter());
+
+    app.listen(PORT, () => {
+        console.log(`listening on ${PORT}...`);
+    });
+}
+
+main().catch(console.error);
