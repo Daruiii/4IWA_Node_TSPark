@@ -12,10 +12,10 @@ export interface Gym {
     address: string;
     contact: string;
     description: string;
-    capcaity: number;
+    capacity: number;
     equipments: string[];
     activities: string[];
-    owenerId: Types.ObjectId | string;
+    ownerId: Types.ObjectId | string;
     status: GymStatus;
     createdAt: Date;
     updatedAt: Date;

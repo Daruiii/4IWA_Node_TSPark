@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express';
 import {config} from 'dotenv';
 import {openMongooseConnection} from "./services/utils";
-import {GymController, UserController} from "./controllers";
+import {ExerciseController, GymController, GymExerciseController, UserController} from "./controllers";
 
 config({quiet: true});
 
@@ -22,6 +22,12 @@ async function main() {
     const gymController = new GymController();
     app.use(gymController.path, gymController.buildRouter());
 
+    const exerciseController = new ExerciseController();
+    app.use(exerciseController.path, exerciseController.buildRouter());
+
+    const gymExerciseController = new GymExerciseController();
+    app.use(gymExerciseController.path, gymExerciseController.buildRouter());
+    
     app.listen(PORT, () => {
         console.log(`listening on ${PORT}...`);
     });

@@ -19,7 +19,7 @@ export function getGymSchema(): Schema<Gym> {
         type: String, 
         required: true 
     },
-      capcaity: { 
+      capacity: { 
         type: Number, 
         required: true 
     },
@@ -31,7 +31,7 @@ export function getGymSchema(): Schema<Gym> {
         type: [String], 
         required: true 
     },
-      owenerId: { 
+      ownerId: { 
         type: Schema.Types.ObjectId, 
         required: true, 
         ref: "User" 
