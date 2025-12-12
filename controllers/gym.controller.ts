@@ -46,8 +46,8 @@ export class GymController {
     async create(req: Request, res: Response) {
         const gymData = req.body;
         
-        if(!gymData.name || !gymData.address || !gymData.contact || !gymData.description || !gymData.capacity || !gymData.equipments || !gymData.activities || !gymData.owenerId) {
-            res.status(400).json({error: "Missing required fields: name, address, contact, description, capacity, equipments, activities, owenerId"});
+        if(!gymData.name || !gymData.address || !gymData.contact || !gymData.description || !gymData.capacity || !gymData.equipments || !gymData.activities || !gymData.ownerId) {
+            res.status(400).json({error: "Missing required fields: name, address, contact, description, capacity, equipments, activities, ownerId"});
             return;
         }
 

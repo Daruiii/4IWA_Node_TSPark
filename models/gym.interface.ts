@@ -15,7 +15,7 @@ export interface Gym {
     capacity: number;
     equipments: string[];
     activities: string[];
-    owenerId: Types.ObjectId | string;
+    ownerId: Types.ObjectId | string;
     status: GymStatus;
     createdAt: Date;
     updatedAt: Date;
