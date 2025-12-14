@@ -1,25 +1,43 @@
 {
-  "name": "tspark-api",
-  "version": "1.0.0",
-  "description": "API for TSPark - Fitness challenges platform",
-  "main": "dist/index.js",
-  "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "tsc && node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": ["fitness", "challenges", "api"],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/express": "^5.0.5",
-    "@types/node": "^24.10.1",
-    "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "mongoose": "^8.20.1"
-  }
+    "name": "tspark-api",
+    "version": "1.0.0",
+    "description": "API for TSPark - Fitness challenges platform",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "dev": "tsc && node dist/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix",
+        "prettier": "prettier --write \"**/*.{ts,json,md}\"",
+        "prettier:check": "prettier --check \"**/*.{ts,json,md}\""
+    },
+    "keywords": [
+        "fitness",
+        "challenges",
+        "api"
+    ],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/bcrypt": "^6.0.0",
+        "@types/express": "^5.0.5",
+        "@types/jsonwebtoken": "^9.0.10",
+        "@types/node": "^24.10.1",
+        "@typescript-eslint/eslint-plugin": "^8.49.0",
+        "@typescript-eslint/parser": "^8.49.0",
+        "eslint": "^9.39.1",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.4",
+        "prettier": "^3.7.4",
+        "typescript": "^5.9.3"
+    },
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "dotenv": "^17.2.3",
+        "express": "^5.1.0",
+        "jsonwebtoken": "^9.0.3",
+        "mongoose": "^8.20.1"
+    }
 }
