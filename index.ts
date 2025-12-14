@@ -1,9 +1,15 @@
-import express, {Request, Response} from 'express';
-import {config} from 'dotenv';
-import {openMongooseConnection} from "./services/utils";
-import {ExerciseController, GymController, GymExerciseController, UserController} from "./controllers";
+import express, { Request, Response } from "express";
+import { config } from "dotenv";
+import { openMongooseConnection } from "./services/utils";
+import {
+    AuthController,
+    ExerciseController,
+    GymController,
+    GymExerciseController,
+    UserController,
+} from "./controllers";
 
-config({quiet: true});
+config({ quiet: true });
 
 async function main() {
     const conn = await openMongooseConnection();
@@ -12,13 +18,16 @@ async function main() {
     const app = express();
     const PORT = process.env.PORT || 3000;
 
-    app.get('/', (req: Request, res: Response) => {
-        res.json({message: 'TSPark API is running'});
+    app.get("/", (req: Request, res: Response) => {
+        res.json({ message: "TSPark API is running" });
     });
+
+    const authController = new AuthController();
+    app.use(authController.path, authController.buildRouter());
 
     const userController = new UserController();
     app.use(userController.path, userController.buildRouter());
-    
+
     const gymController = new GymController();
     app.use(gymController.path, gymController.buildRouter());
 
@@ -27,7 +36,7 @@ async function main() {
 
     const gymExerciseController = new GymExerciseController();
     app.use(gymExerciseController.path, gymExerciseController.buildRouter());
-    
+
     app.listen(PORT, () => {
         console.log(`listening on ${PORT}...`);
     });

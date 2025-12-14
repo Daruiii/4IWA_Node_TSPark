@@ -3,9 +3,11 @@
 API REST pour la plateforme de défis fitness TSPark.
 
 ## IMPORTANT : Bien regarder le schema de la base de données avant de travailler dessus.
+
 [Schéma de la BDD - dbdiagram.io](https://dbdiagram.io/d/4IWA-NodeJs-TSpark-693bef3be877c6307496f75f)
 
 ## Pour qu'on bosse en même temps : (Méthode Agile HEHEHEHA)
+
 - Cloner le repo (logique mdr)
 - Créer une branche par feature (git checkout -b feature/ma-feature)
 - on voit en DM qui fait quoi ou on se fait un ptit tableau au pire
@@ -53,29 +55,6 @@ Le serveur démarre sur **http://localhost:3000**
 ```bash
 curl http://localhost:3000
 # {"message":"TSPark API is running"}
-```
-
-### Créer un utilisateur
-```bash
-curl -X POST http://localhost:3000/users \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "test@test.com",
-    "password": "password123",
-    "role": "client",
-    "firstName": "John",
-    "lastName": "Doe"
-  }'
-```
-
-### Récupérer tous les utilisateurs
-```bash
-curl http://localhost:3000/users
-```
-
-### Récupérer un utilisateur par ID
-```bash
-curl http://localhost:3000/users/{id}
 ```
 
 ## Base de données

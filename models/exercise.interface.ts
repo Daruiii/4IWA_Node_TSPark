@@ -1,7 +1,7 @@
 export enum ExerciseDifficulty {
     easy = "easy",
     medium = "medium",
-    hard = "hard"
+    hard = "hard",
 }
 
 export interface Exercise {

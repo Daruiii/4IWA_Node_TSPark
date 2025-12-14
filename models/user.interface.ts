@@ -1,7 +1,7 @@
 export enum UserRole {
     admin = "admin",
     gym_owner = "gym_owner",
-    client = "client"
+    client = "client",
 }
 
 export interface User {

@@ -3,11 +3,11 @@ import { Types } from "mongoose";
 export enum GymStatus {
     pending = "pending",
     approved = "approved",
-    rejected = "rejected"
+    rejected = "rejected",
 }
 
 export interface Gym {
-    _id: string;    
+    _id: string;
     name: string;
     address: string;
     contact: string;
