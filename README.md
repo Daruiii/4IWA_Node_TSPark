@@ -36,6 +36,20 @@ docker compose up -d
 docker ps
 ```
 
+## Créer l'administrateur initial
+
+**Une seule fois** après avoir lancé MongoDB :
+
+```bash
+npm run seed:admin
+```
+
+Créera un utilisateur admin :
+- **Email** : `admin@tspark.com`
+- **Password** : `admin123`
+
+Le script vérifie si un admin existe déjà pour éviter les doublons.
+
 ## Démarrer le serveur
 
 ```bash
@@ -82,9 +96,23 @@ npm run lint:fix
 
 **💡 Conseil :** Lance `npm run prettier && npm run lint` avant de commit
 
-## Tester l'API
+## Tester l'API avec Postman
 
-### Route de test
+### Importer la collection
+
+1. Ouvre Postman
+2. **Import** → **Upload Files**
+3. Sélectionne `TSPark.postman_collection.json`
+4. La collection apparaît avec toutes les routes organisées
+
+### Utiliser la collection
+
+1. Lance d'abord **Login** ou **Register**
+2. Le token JWT est **automatiquement sauvegardé** dans les variables
+3. Toutes les autres routes utilisent ce token automatiquement
+4. Change la variable `baseUrl` pour pointer vers ton URL de prod quand tu déploies
+
+### Route de test rapide
 
 ```bash
 curl http://localhost:3000

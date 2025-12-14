@@ -1,7 +1,7 @@
-import {json, Request, Response, Router} from "express";
-import {model} from "mongoose";
-import {GymExercise} from "../models";
-import {getGymExerciseSchema} from "../services/schema";
+import { json, Request, Response, Router } from "express";
+import { model } from "mongoose";
+import { GymExercise } from "../models";
+import { getGymExerciseSchema } from "../services/schema";
 
 export class GymExerciseController {
     readonly path: string;
@@ -18,61 +18,63 @@ export class GymExerciseController {
 
     async getByGymId(req: Request, res: Response) {
         const gymId = req.params.gymId;
-        const gymExercises = await this.gymExerciseModel.find({gymId}).populate("exerciseId");
+        const gymExercises = await this.gymExerciseModel.find({ gymId }).populate("exerciseId");
         res.json(gymExercises);
     }
 
     async create(req: Request, res: Response) {
-        const {gymId, exerciseId} = req.body;
-        
-        if(!gymId || !exerciseId) {
-            res.status(400).json({error: "Missing required fields: gymId, exerciseId"});
+        const { gymId, exerciseId } = req.body;
+
+        if (!gymId || !exerciseId) {
+            res.status(400).json({ error: "Missing required fields: gymId, exerciseId" });
             return;
         }
 
-        const existingRelation = await this.gymExerciseModel.findOne({gymId, exerciseId});
-        if(existingRelation) {
-            res.status(409).json({error: "This exercise is already assigned to this gym"});
+        const existingRelation = await this.gymExerciseModel.findOne({ gymId, exerciseId });
+        if (existingRelation) {
+            res.status(409).json({ error: "This exercise is already assigned to this gym" });
             return;
         }
 
-        const newGymExercise = new this.gymExerciseModel({gymId, exerciseId});
+        const newGymExercise = new this.gymExerciseModel({ gymId, exerciseId });
         await newGymExercise.save();
-        
-        const populatedGymExercise = await this.gymExerciseModel.findById(newGymExercise._id).populate(["gymId", "exerciseId"]);
-        
+
+        const populatedGymExercise = await this.gymExerciseModel
+            .findById(newGymExercise._id)
+            .populate(["gymId", "exerciseId"]);
+
         res.status(201).json(populatedGymExercise);
     }
 
     async delete(req: Request, res: Response) {
         const gymExerciseId = req.params.id;
-        
+
         const gymExercise = await this.gymExerciseModel.findByIdAndDelete(gymExerciseId);
-        
-        if(!gymExercise) {
-            res.status(404).json({error: "GymExercise relation not found"});
+
+        if (!gymExercise) {
+            res.status(404).json({ error: "GymExercise relation not found" });
             return;
         }
-        
-        res.json({message: "Exercise removed from gym successfully"});
+
+        res.json({ message: "Exercise removed from gym successfully" });
     }
 
     async deleteByGymAndExercise(req: Request, res: Response) {
-        const {gymId, exerciseId} = req.body;
+        const { gymId, exerciseId } = req.body;
 
-        if(!gymId || !exerciseId) {
-            res.status(400).json({error: "Missing required fields: gymId, exerciseId"});
+        if (!gymId || !exerciseId) {
+            res.status(400).json({ error: "Missing required fields: gymId, exerciseId" });
             return;
         }
 
-        const gymExercise = await this.gymExerciseModel.findOneAndDelete({gymId, exerciseId});
-        
-        if(!gymExercise) {
-            res.status(404).json({error: "GymExercise relation not found"});
+        const gymExercise = await this.gymExerciseModel.findOneAndDelete({ gymId, exerciseId });
+
+        if (!gymExercise) {
+            res.status(404).json({ error: "GymExercise relation not found" });
             return;
         }
-        
-        res.json({message: "Exercise removed from gym successfully"});
+
+        res.json({ message: "Exercise removed from gym successfully" });
     }
 
     buildRouter(): Router {
