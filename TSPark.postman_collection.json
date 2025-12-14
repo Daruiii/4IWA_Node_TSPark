@@ -13,12 +13,38 @@
 		{
 			"key": "token",
 			"value": "",
-			"type": "string"
+			"type": "string",
+			"description": "JWT Token - auto-set après login/register"
 		},
 		{
 			"key": "userId",
 			"value": "",
-			"type": "string"
+			"type": "string",
+			"description": "User ID - auto-set après login/register"
+		},
+		{
+			"key": "gymId",
+			"value": "",
+			"type": "string",
+			"description": "Gym ID - auto-set après création d'un gym"
+		},
+		{
+			"key": "exerciseId",
+			"value": "",
+			"type": "string",
+			"description": "Exercise ID - auto-set après création d'un exercise"
+		},
+		{
+			"key": "challengeId",
+			"value": "",
+			"type": "string",
+			"description": "Challenge ID - auto-set après création d'un challenge"
+		},
+		{
+			"key": "participantId",
+			"value": "",
+			"type": "string",
+			"description": "Participant ID - auto-set après jointure d'un challenge"
 		}
 	],
 	"item": [
@@ -307,6 +333,23 @@
 				},
 				{
 					"name": "Create Gym",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"gymId\", jsonData._id);",
+									"    console.log(' Gym créé avec ID: ' + jsonData._id);",
+									"} else {",
+									"    console.log(' Erreur lors de la création du gym');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -465,6 +508,23 @@
 				},
 				{
 					"name": "Create Exercise (Admin only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"exerciseId\", jsonData._id);",
+									"    console.log(' Exercice créé avec ID: ' + jsonData._id);",
+									"} else {",
+									"    console.log(' Erreur lors de la création de l\\'exercice');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -622,6 +682,371 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Challenges",
+			"item": [
+				{
+					"name": "Get All Active Challenges",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenges",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges"]
+						}
+					}
+				},
+				{
+					"name": "Get Challenges By Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenges/status/active",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges", "status", "active"]
+						}
+					}
+				},
+				{
+					"name": "Get Challenges By Gym",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenges/gym/{{gymId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges", "gym", "{{gymId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get Challenge By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenges/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges", ":id"]
+						}
+					}
+				},
+				{
+					"name": "Create Challenge (GymOwner only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"challengeId\", jsonData._id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Challenge 100 Pompes\",\n  \"description\": \"Faites 100 pompes en 30 jours\",\n  \"type\": \"strength\",\n  \"difficulty\": \"medium\",\n  \"duration\": 30,\n  \"objective\": \"Réaliser 100 pompes au total\",\n  \"gymId\": \"{{gymId}}\",\n  \"rewards\": {\n    \"scorePoints\": 500,\n    \"description\": \"Complétez le challenge pour gagner 500 points\"\n  },\n  \"startDate\": \"2025-01-01T00:00:00Z\",\n  \"endDate\": \"2025-02-01T00:00:00Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/challenges",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges"]
+						}
+					}
+				},
+				{
+					"name": "Update Challenge (GymOwner only)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Challenge Name\",\n  \"difficulty\": \"hard\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/challenges/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges", ":id"]
+						}
+					}
+				},
+				{
+					"name": "Update Challenge Status (GymOwner only)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"active\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/challenges/:id/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges", ":id", "status"]
+						}
+					}
+				},
+				{
+					"name": "Delete Challenge (GymOwner only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/challenges/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges", ":id"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Challenge Participants",
+			"item": [
+				{
+					"name": "Get All Participants",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenge-participants",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenge-participants"]
+						}
+					}
+				},
+				{
+					"name": "Get Participants By Challenge",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenge-participants/challenge/{{challengeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenge-participants", "challenge", "{{challengeId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get My Challenges (User only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/challenge-participants/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenge-participants", "user", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get Participant By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenge-participants/{{participantId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenge-participants", "{{participantId}}"]
+						}
+					}
+				},
+				{
+					"name": "Join Challenge",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"participantId\", jsonData._id);",
+									"    console.log(' Challenge rejoint! Participant ID: ' + jsonData._id);",
+									"} else {",
+									"    console.log(' Erreur lors de la jointure du challenge');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"challengeId\": \"{{challengeId}}\",\n  \"targetValue\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/challenge-participants/join",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenge-participants", "join"]
+						}
+					}
+				},
+				{
+					"name": "Update Progress",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"progressValue\": 50\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/challenge-participants/{{participantId}}/progress",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenge-participants", "{{participantId}}", "progress"]
+						}
+					}
+				},
+				{
+					"name": "Update Participant Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"completed\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/challenge-participants/{{participantId}}/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenge-participants", "{{participantId}}", "status"]
+						}
+					}
+				},
+				{
+					"name": "Abandon Challenge",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/challenge-participants/{{participantId}}/abandon",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenge-participants", "{{participantId}}", "abandon"]
+						}
+					}
+				},
+				{
+					"name": "Delete Participant",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/challenge-participants/{{participantId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenge-participants", "{{participantId}}"]
+						}
+					}
+				}
+			]
 		}
 	]
 }
+
+
+
+
+
+
