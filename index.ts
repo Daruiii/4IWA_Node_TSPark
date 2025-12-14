@@ -7,6 +7,8 @@ import {
     GymController,
     GymExerciseController,
     UserController,
+    ChallengeController,
+    ChallengeParticipantController,
 } from "./controllers";
 
 config({ quiet: true });
@@ -36,6 +38,12 @@ async function main() {
 
     const gymExerciseController = new GymExerciseController();
     app.use(gymExerciseController.path, gymExerciseController.buildRouter());
+
+    const challengeController = new ChallengeController();
+    app.use(challengeController.path, challengeController.buildRouter());
+
+    const challengeParticipantController = new ChallengeParticipantController();
+    app.use(challengeParticipantController.path,challengeParticipantController.buildRouter());
 
     app.listen(PORT, () => {
         console.log(`listening on ${PORT}...`);
