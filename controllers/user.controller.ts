@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { User, UserRole } from "../models";
 import { getUserSchema } from "../services/schema";
 import { getOrCreateModel } from "../services/utils";
-import { authMiddleware, requireRole, requireOwnerOrAdmin } from "../middlewares";
+import { authMiddleware, requireRole, requireSelfOrAdmin } from "../middlewares";
 
 export class UserController {
     readonly path: string;
@@ -60,19 +60,9 @@ export class UserController {
         });
         await newUser.save();
 
-        const userResponse = {
-            _id: newUser._id,
-            email: newUser.email,
-            role: newUser.role,
-            isActive: newUser.isActive,
-            score: newUser.score,
-            firstName: newUser.firstName,
-            lastName: newUser.lastName,
-            createdAt: newUser.createdAt,
-            updatedAt: newUser.updatedAt,
-        };
+        const user = await this.userModel.findById(newUser._id).select("-password");
 
-        res.status(201).json(userResponse);
+        res.status(201).json(user);
     }
 
     async update(req: Request, res: Response) {
@@ -96,6 +86,7 @@ export class UserController {
     }
 
     async delete(req: Request, res: Response) {
+        // desactivate
         const userId = req.params.id;
 
         const user = await this.userModel
@@ -127,10 +118,8 @@ export class UserController {
 
     buildRouter(): Router {
         const router = Router();
-
         router.get("/", authMiddleware, this.getAll.bind(this));
         router.get("/:id", authMiddleware, this.getById.bind(this));
-
         router.post(
             "/",
             authMiddleware,
@@ -144,9 +133,9 @@ export class UserController {
             requireRole(UserRole.admin),
             this.activate.bind(this)
         );
-
-        router.patch("/:id", authMiddleware, requireOwnerOrAdmin, json(), this.update.bind(this));
-        router.delete("/:id", authMiddleware, requireOwnerOrAdmin, this.delete.bind(this));
+        //
+        router.patch("/:id", authMiddleware, requireSelfOrAdmin, json(), this.update.bind(this));
+        router.delete("/:id", authMiddleware, requireSelfOrAdmin, this.delete.bind(this));
 
         return router;
     }

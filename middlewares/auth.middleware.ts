@@ -41,7 +41,7 @@ export function requireRole(...roles: UserRole[]) {
     };
 }
 
-export function requireOwnerOrAdmin(req: AuthRequest, res: Response, next: NextFunction) {
+export function requireSelfOrAdmin(req: AuthRequest, res: Response, next: NextFunction) {
     const targetUserId = req.params.id;
 
     if (req.userRole === UserRole.admin || req.userId === targetUserId) {
