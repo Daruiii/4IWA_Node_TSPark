@@ -699,6 +699,89 @@
 					}
 				},
 				{
+					"name": "Get Challenges (Filter by Difficulty)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenges?difficulty=easy",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges"],
+							"query": [
+								{
+									"key": "difficulty",
+									"value": "easy",
+									"description": "Filter by difficulty: easy, medium, hard"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Challenges (Filter by Type)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenges?type=cardio",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges"],
+							"query": [
+								{
+									"key": "type",
+									"value": "cardio",
+									"description": "Filter by type: cardio, strength, flexibility, endurance"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Challenges (Filter by Duration)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenges?duration=30",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges"],
+							"query": [
+								{
+									"key": "duration",
+									"value": "30",
+									"description": "Filter by duration in days"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Challenges (Combined Filters)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/challenges?difficulty=medium&type=strength&duration=30",
+							"host": ["{{baseUrl}}"],
+							"path": ["challenges"],
+							"query": [
+								{
+									"key": "difficulty",
+									"value": "medium"
+								},
+								{
+									"key": "type",
+									"value": "strength"
+								},
+								{
+									"key": "duration",
+									"value": "30"
+								}
+							]
+						}
+					}
+				},
+				{
 					"name": "Get Challenges By Status",
 					"request": {
 						"method": "GET",
