@@ -45,7 +45,7 @@ export function getGymSchema(): Schema<Gym> {
         },
         {
             versionKey: false,
-            collection: "Gyms",
+            collection: "gyms",
             timestamps: true,
         }
     );

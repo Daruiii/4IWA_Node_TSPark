@@ -17,7 +17,7 @@ export function getGymExerciseSchema(): Schema<GymExercise> {
         },
         {
             versionKey: false,
-            collection: "GymExercises",
+            collection: "gymexercises",
             timestamps: true,
         }
     );

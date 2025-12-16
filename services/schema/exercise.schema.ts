@@ -24,7 +24,7 @@ export function getExerciseSchema(): Schema<Exercise> {
         },
         {
             versionKey: false,
-            collection: "Exercises",
+            collection: "exercises",
             timestamps: true,
         }
     );

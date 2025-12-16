@@ -48,7 +48,7 @@ export function getChallengeParticipantSchema(): Schema<ChallengeParticipant> {
         },
         {
             versionKey: false,
-            collection: "ChallengeParticipants",
+            collection: "challengeparticipants",
             timestamps: true,
         }
     );

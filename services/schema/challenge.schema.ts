@@ -66,7 +66,7 @@ export function getChallengeSchema(): Schema<Challenge> {
         },
         {
             versionKey: false,
-            collection: "Challenges",
+            collection: "challenges",
             timestamps: true,
         }
     );

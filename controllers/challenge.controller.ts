@@ -15,8 +15,24 @@ export class ChallengeController {
     }
 
     async getAll(req: Request, res: Response) {
+        const { difficulty, type, duration } = req.query;
+
+        const filter: any = { status: ChallengeStatus.active };
+
+        if (difficulty) {
+            filter.difficulty = difficulty;
+        }
+
+        if (type) {
+            filter.type = type;
+        }
+
+        if (duration) {
+            filter.duration = Number(duration);
+        }
+
         const challenges = await this.challengeModel
-            .find({ status: ChallengeStatus.active })
+            .find(filter)
             .populate(["gymId", "createdBy"]);
         res.json(challenges);
     }
@@ -77,6 +93,16 @@ export class ChallengeController {
         ) {
             res.status(400).json({
                 error: "Missing required fields: name, description, type, difficulty, duration, objective, gymId, rewards, startDate, endDate",
+            });
+            return;
+        }
+
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (end <= start) {
+            res.status(400).json({
+                error: "End date must be after start date",
             });
             return;
         }
