@@ -29,4 +29,3 @@ export interface Badge {
     createdAt: Date;
     updatedAt: Date;
 }
-

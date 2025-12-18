@@ -21,9 +21,8 @@ export function getUserBadgeSchema(): Schema<UserBadge> {
         },
         {
             versionKey: false,
-            collection: "UserBadges",
+            collection: "userbadges",
             timestamps: true,
         }
     );
 }
-

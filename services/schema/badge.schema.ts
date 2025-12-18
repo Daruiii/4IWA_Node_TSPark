@@ -44,9 +44,8 @@ export function getBadgeSchema(): Schema<Badge> {
         },
         {
             versionKey: false,
-            collection: "Badges",
+            collection: "badges",
             timestamps: true,
         }
     );
 }
-

@@ -29,7 +29,7 @@ export interface UserStats {
     challengesFailed: number;
     challengesAbandoned: number;
     completionRate: number;
-    recentBadges: any[];
+    recentBadges: UserBadge[];
     rank?: number;
 }
 
@@ -153,7 +153,7 @@ export class StatsController {
 
         const result = leaderboard.map((user, index) => ({
             rank: index + 1,
-            odUserId: user._id,
+            userId: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             score: user.score || 0,
@@ -191,9 +191,7 @@ export class StatsController {
         });
 
         const globalCompletionRate =
-            totalParticipations > 0
-                ? Math.round((totalCompleted / totalParticipations) * 100)
-                : 0;
+            totalParticipations > 0 ? Math.round((totalCompleted / totalParticipations) * 100) : 0;
 
         res.json({
             totalUsers,

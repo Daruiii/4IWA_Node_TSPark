@@ -46,7 +46,7 @@ async function main() {
     app.use(challengeController.path, challengeController.buildRouter());
 
     const challengeParticipantController = new ChallengeParticipantController();
-    app.use(challengeParticipantController.path,challengeParticipantController.buildRouter());
+    app.use(challengeParticipantController.path, challengeParticipantController.buildRouter());
 
     const badgeController = new BadgeController();
     app.use(badgeController.path, badgeController.buildRouter());

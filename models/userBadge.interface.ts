@@ -8,4 +8,3 @@ export interface UserBadge {
     createdAt: Date;
     updatedAt: Date;
 }
-

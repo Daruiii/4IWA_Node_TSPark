@@ -22,7 +22,8 @@ export class BadgeController {
 
         if (!Object.values(BadgeCategory).includes(category as BadgeCategory)) {
             res.status(400).json({
-                error: "Invalid category. Must be one of: " + Object.values(BadgeCategory).join(", "),
+                error:
+                    "Invalid category. Must be one of: " + Object.values(BadgeCategory).join(", "),
             });
             return;
         }
@@ -69,7 +70,8 @@ export class BadgeController {
 
         if (!Object.values(BadgeCategory).includes(category)) {
             res.status(400).json({
-                error: "Invalid category. Must be one of: " + Object.values(BadgeCategory).join(", "),
+                error:
+                    "Invalid category. Must be one of: " + Object.values(BadgeCategory).join(", "),
             });
             return;
         }
@@ -114,7 +116,8 @@ export class BadgeController {
 
         if (updates.category && !Object.values(BadgeCategory).includes(updates.category)) {
             res.status(400).json({
-                error: "Invalid category. Must be one of: " + Object.values(BadgeCategory).join(", "),
+                error:
+                    "Invalid category. Must be one of: " + Object.values(BadgeCategory).join(", "),
             });
             return;
         }
@@ -171,14 +174,8 @@ export class BadgeController {
             json(),
             this.update.bind(this)
         );
-        router.delete(
-            "/:id",
-            authMiddleware,
-            requireRole(UserRole.admin),
-            this.delete.bind(this)
-        );
+        router.delete("/:id", authMiddleware, requireRole(UserRole.admin), this.delete.bind(this));
 
         return router;
     }
 }
-
