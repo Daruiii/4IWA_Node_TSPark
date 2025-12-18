@@ -9,6 +9,9 @@ import {
     UserController,
     ChallengeController,
     ChallengeParticipantController,
+    BadgeController,
+    UserBadgeController,
+    StatsController,
 } from "./controllers";
 
 config({ quiet: true });
@@ -44,6 +47,15 @@ async function main() {
 
     const challengeParticipantController = new ChallengeParticipantController();
     app.use(challengeParticipantController.path,challengeParticipantController.buildRouter());
+
+    const badgeController = new BadgeController();
+    app.use(badgeController.path, badgeController.buildRouter());
+
+    const userBadgeController = new UserBadgeController();
+    app.use(userBadgeController.path, userBadgeController.buildRouter());
+
+    const statsController = new StatsController();
+    app.use(statsController.path, statsController.buildRouter());
 
     app.listen(PORT, () => {
         console.log(`listening on ${PORT}...`);

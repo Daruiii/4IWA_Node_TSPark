@@ -4,3 +4,5 @@ export * from "./exercise.interface";
 export * from "./gymExercise.interface";
 export * from "./challenge.interface";
 export * from "./challengeParticipant.interface";
+export * from "./badge.interface";
+export * from "./userBadge.interface";

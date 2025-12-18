@@ -5,3 +5,6 @@ export * from "./gymExercise.controller";
 export * from "./auth.controller";
 export * from "./challenge.controller";
 export * from "./challengeParticipant.controller";
+export * from "./badge.controller";
+export * from "./userBadge.controller";
+export * from "./stats.controller";

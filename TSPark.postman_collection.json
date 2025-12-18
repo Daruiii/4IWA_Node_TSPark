@@ -45,6 +45,12 @@
 			"value": "",
 			"type": "string",
 			"description": "Participant ID - auto-set après jointure d'un challenge"
+		},
+		{
+			"key": "badgeId",
+			"value": "",
+			"type": "string",
+			"description": "Badge ID - auto-set après création d'un badge"
 		}
 	],
 	"item": [
@@ -1037,6 +1043,323 @@
 							"raw": "{{baseUrl}}/challenge-participants/{{participantId}}",
 							"host": ["{{baseUrl}}"],
 							"path": ["challenge-participants", "{{participantId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Badges",
+			"item": [
+				{
+					"name": "Get All Badges",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/badges",
+							"host": ["{{baseUrl}}"],
+							"path": ["badges"]
+						}
+					}
+				},
+				{
+					"name": "Get Badges By Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/badges/category/challenge",
+							"host": ["{{baseUrl}}"],
+							"path": ["badges", "category", "challenge"]
+						},
+						"description": "Categories: challenge, streak, social, milestone"
+					}
+				},
+				{
+					"name": "Get Badges By Rarity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/badges/rarity/common",
+							"host": ["{{baseUrl}}"],
+							"path": ["badges", "rarity", "common"]
+						},
+						"description": "Rarities: common, rare, epic, legendary"
+					}
+				},
+				{
+					"name": "Get Badge By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/badges/{{badgeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["badges", "{{badgeId}}"]
+						}
+					}
+				},
+				{
+					"name": "Create Badge (Admin only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"badgeId\", jsonData._id);",
+									"    console.log('Badge créé avec ID: ' + jsonData._id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Premier Défi\",\n  \"description\": \"Complétez votre premier défi fitness\",\n  \"icon\": \"🏆\",\n  \"category\": \"challenge\",\n  \"rarity\": \"common\",\n  \"condition\": {\n    \"conditionType\": \"challenges_completed\",\n    \"value\": 1\n  },\n  \"scoreReward\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/badges",
+							"host": ["{{baseUrl}}"],
+							"path": ["badges"]
+						}
+					}
+				},
+				{
+					"name": "Update Badge (Admin only)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Description mise à jour\",\n  \"scoreReward\": 150\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/badges/{{badgeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["badges", "{{badgeId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete Badge (Admin only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/badges/{{badgeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["badges", "{{badgeId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "User Badges",
+			"item": [
+				{
+					"name": "Get My Badges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user-badges/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["user-badges", "me"]
+						}
+					}
+				},
+				{
+					"name": "Get User Badges By User ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user-badges/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["user-badges", "user", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Check If User Has Badge",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user-badges/check/{{userId}}/{{badgeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["user-badges", "check", "{{userId}}", "{{badgeId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get Badge Leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user-badges/leaderboard?limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["user-badges", "leaderboard"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Award Badge to User (Admin only)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"{{userId}}\",\n  \"badgeId\": \"{{badgeId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user-badges/award",
+							"host": ["{{baseUrl}}"],
+							"path": ["user-badges", "award"]
+						}
+					}
+				},
+				{
+					"name": "Revoke Badge from User (Admin only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/user-badges/revoke/{{userId}}/{{badgeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["user-badges", "revoke", "{{userId}}", "{{badgeId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Stats",
+			"item": [
+				{
+					"name": "Get My Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/stats/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["stats", "me"]
+						}
+					}
+				},
+				{
+					"name": "Get User Stats By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/stats/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["stats", "user", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get Score Leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/stats/leaderboard?limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["stats", "leaderboard"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Global Platform Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/stats/global",
+							"host": ["{{baseUrl}}"],
+							"path": ["stats", "global"]
 						}
 					}
 				}

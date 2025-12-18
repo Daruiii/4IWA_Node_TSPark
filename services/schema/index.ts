@@ -4,3 +4,5 @@ export * from "./exercise.schema";
 export * from "./gymExercise.schema";
 export * from "./challenge.schema";
 export * from "./challengeParticipant.schema";
+export * from "./badge.schema";
+export * from "./userBadge.schema";
