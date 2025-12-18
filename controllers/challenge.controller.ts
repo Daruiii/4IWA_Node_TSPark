@@ -1,5 +1,4 @@
 import { json, Request, Response, Router } from "express";
-import { model } from "mongoose";
 import { Challenge, ChallengeStatus } from "../models";
 import { getChallengeSchema } from "../services/schema";
 import { getOrCreateModel } from "../services/utils";
@@ -17,23 +16,28 @@ export class ChallengeController {
     async getAll(req: Request, res: Response) {
         const { difficulty, type, duration } = req.query;
 
-        const filter: any = { status: ChallengeStatus.active };
+        const filter: {
+            status: ChallengeStatus;
+            difficulty?: string;
+            type?: string;
+            duration?: number;
+        } = {
+            status: ChallengeStatus.active,
+        };
 
         if (difficulty) {
-            filter.difficulty = difficulty;
+            filter.difficulty = difficulty as string;
         }
 
         if (type) {
-            filter.type = type;
+            filter.type = type as string;
         }
 
         if (duration) {
             filter.duration = Number(duration);
         }
 
-        const challenges = await this.challengeModel
-            .find(filter)
-            .populate(["gymId", "createdBy"]);
+        const challenges = await this.challengeModel.find(filter).populate(["gymId", "createdBy"]);
         res.json(challenges);
     }
 
@@ -42,7 +46,8 @@ export class ChallengeController {
 
         if (!Object.values(ChallengeStatus).includes(status as ChallengeStatus)) {
             res.status(400).json({
-                error: "Invalid status. Must be one of: " + Object.values(ChallengeStatus).join(", "),
+                error:
+                    "Invalid status. Must be one of: " + Object.values(ChallengeStatus).join(", "),
             });
             return;
         }
@@ -76,8 +81,18 @@ export class ChallengeController {
     }
 
     async create(req: Request, res: Response) {
-        const { name, description, type, difficulty, duration, objective, gymId, rewards, startDate, endDate } =
-            req.body;
+        const {
+            name,
+            description,
+            type,
+            difficulty,
+            duration,
+            objective,
+            gymId,
+            rewards,
+            startDate,
+            endDate,
+        } = req.body;
 
         if (
             !name ||
@@ -115,7 +130,7 @@ export class ChallengeController {
             duration,
             objective,
             gymId,
-            createdBy: (req as any).userId,
+            createdBy: (req as Request & { userId: string }).userId,
             rewards,
             status: ChallengeStatus.draft,
             startDate,
@@ -154,7 +169,8 @@ export class ChallengeController {
 
         if (!Object.values(ChallengeStatus).includes(status)) {
             res.status(400).json({
-                error: "Invalid status. Must be one of: " + Object.values(ChallengeStatus).join(", "),
+                error:
+                    "Invalid status. Must be one of: " + Object.values(ChallengeStatus).join(", "),
             });
             return;
         }

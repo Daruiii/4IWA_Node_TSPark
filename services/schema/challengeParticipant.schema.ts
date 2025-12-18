@@ -1,8 +1,5 @@
 import { Schema } from "mongoose";
-import {
-    ChallengeParticipant,
-    ChallengeParticipantStatus,
-} from "../../models";
+import { ChallengeParticipant, ChallengeParticipantStatus } from "../../models";
 
 export function getChallengeParticipantSchema(): Schema<ChallengeParticipant> {
     return new Schema<ChallengeParticipant>(

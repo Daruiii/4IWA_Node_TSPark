@@ -45,6 +45,7 @@ npm run seed:admin
 ```
 
 Créera un utilisateur admin :
+
 - **Email** : `admin@tspark.com`
 - **Password** : `admin123`
 

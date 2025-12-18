@@ -1,7 +1,10 @@
 import { json, Request, Response, Router } from "express";
-import { model } from "mongoose";
 import { ChallengeParticipant, ChallengeParticipantStatus, Challenge, User } from "../models";
-import { getChallengeParticipantSchema, getChallengeSchema, getUserSchema } from "../services/schema";
+import {
+    getChallengeParticipantSchema,
+    getChallengeSchema,
+    getUserSchema,
+} from "../services/schema";
 import { getOrCreateModel } from "../services/utils";
 import { authMiddleware } from "../middlewares";
 
@@ -57,7 +60,7 @@ export class ChallengeParticipantController {
 
     async joinChallenge(req: Request, res: Response) {
         const { challengeId, targetValue } = req.body;
-        const userId = (req as any).userId;
+        const userId = (req as Request & { userId: string }).userId;
 
         if (!challengeId || !targetValue) {
             res.status(400).json({ error: "Missing required fields: challengeId, targetValue" });
@@ -113,12 +116,15 @@ export class ChallengeParticipantController {
             return;
         }
 
-        const progress = Math.min(
-            Math.round((progressValue / participant.targetValue) * 100),
-            100
-        );
+        const progress = Math.min(Math.round((progressValue / participant.targetValue) * 100), 100);
 
-        const updates: any = {
+        const updates: {
+            progressValue: number;
+            progress: number;
+            status?: ChallengeParticipantStatus;
+            completedAt?: Date;
+            scoreEarned?: number;
+        } = {
             progressValue,
             progress,
         };
@@ -130,7 +136,7 @@ export class ChallengeParticipantController {
             const challenge = await this.challengeModel.findById(participant.challengeId);
             if (challenge) {
                 updates.scoreEarned = challenge.rewards.scorePoints;
-                
+
                 await this.userModel.findByIdAndUpdate(
                     participant.userId,
                     { $inc: { score: challenge.rewards.scorePoints } },
@@ -166,7 +172,11 @@ export class ChallengeParticipantController {
             return;
         }
 
-        const updates: any = { status };
+        const updates: {
+            status: ChallengeParticipantStatus;
+            completedAt?: Date;
+            scoreEarned?: number;
+        } = { status };
 
         if (status === ChallengeParticipantStatus.completed) {
             updates.completedAt = new Date();
@@ -175,7 +185,7 @@ export class ChallengeParticipantController {
                 const challenge = await this.challengeModel.findById(participant.challengeId);
                 if (challenge && !participant.scoreEarned) {
                     updates.scoreEarned = challenge.rewards.scorePoints;
-                    
+
                     await this.userModel.findByIdAndUpdate(
                         participant.userId,
                         { $inc: { score: challenge.rewards.scorePoints } },
