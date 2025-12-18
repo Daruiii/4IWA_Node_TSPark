@@ -155,7 +155,7 @@ export class UserBadgeController {
             {
                 $project: {
                     _id: 0,
-                    odUserId: "$_id",
+                    userId: "$_id",
                     badgeCount: 1,
                     firstName: "$user.firstName",
                     lastName: "$user.lastName",
