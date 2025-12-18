@@ -1,145 +1,190 @@
-# TSPark API
+# TSPark API - Documentation Projet
 
-API REST pour la plateforme de défis fitness TSPark.
+**Plateforme de défis fitness avec système de gamification**
 
-## IMPORTANT : Bien regarder le schema de la base de données avant de travailler dessus.
+---
 
-[Schéma de la BDD - dbdiagram.io](https://dbdiagram.io/d/4IWA-NodeJs-TSpark-693bef3be877c6307496f75f)
+## API en Production
 
-## Pour qu'on bosse en même temps : (Méthode Agile HEHEHEHA)
+**URL de base :** `https://fouriwa-node-tspark.onrender.com`
 
-- Cloner le repo (logique mdr)
-- Créer une branche par feature (git checkout -b feature/ma-feature)
-- on voit en DM qui fait quoi ou on se fait un ptit tableau au pire
-- Faire des PR quand c'est prêt à être revu/mergé (bon pas grave au pire mdr mais mieux)
-- Merge rapidement quand c'est ok
-- Re pull souvent la branche main pour être à jour !
+---
 
-## Installation
+## Documentation & Collections Postman
 
-```bash
-# Cloner le repo
-git clone https://github.com/Daruiii/4IWA_Node_TSPark.git
-cd 4IWA_Node_TSPark
+### Collection Postman de Production
 
-# Installer les dépendances
-npm install
+**Fichier :** `TSPark_Production.postman_collection.json`
+
+**Import dans Postman :**
+1. Ouvrir Postman
+2. Import → Upload Files
+3. Sélectionner `TSPark_Production.postman_collection.json`
+4. Toutes les routes sont préconfigurées pour la production
+
+**Features de la collection :**
+- ✅ BaseUrl configuré automatiquement pour la production
+- ✅ Token JWT sauvegardé automatiquement après login
+- ✅ Variables d'environnement pour userId, gymId, challengeId, etc.
+- ✅ 50+ requêtes organisées par fonctionnalité
+
+---
+
+## Comptes de Test Disponibles
+
+### Administrateur
+```
+Email: admin@tspark.com
+Mot de passe: admin123
+```
+**Accès complet** : Gestion des utilisateurs, gyms, exercices, badges
+
+### Propriétaire de Salle
+```
+Email: gymowner@tspark.com
+Mot de passe: gym123
+```
+**Peut** : Créer des challenges, gérer sa salle
+
+### Utilisateurs Clients (avec données)
+
+**Nenou** - 1er du classement (300 points, 1 badge)
+```
+Email: nenou@client.com
+Mot de passe: client123
 ```
 
-## 🐳 Lancer MongoDB avec Docker
-
-```bash
-# Démarrer MongoDB
-docker compose up -d
-
-# Vérifier que ça tourne
-docker ps
+**Kiki** - 2ème du classement (200 points)
+```
+Email: kiki@client.com
+Mot de passe: client123
 ```
 
-## Créer l'administrateur initial
-
-**Une seule fois** après avoir lancé MongoDB :
-
-```bash
-npm run seed:admin
+**David** - 3ème du classement (0 points)
+```
+Email: david@client.com
+Mot de passe: client123
 ```
 
-Créera un utilisateur admin :
+## Données de Démonstration
 
-- **Email** : `admin@tspark.com`
-- **Password** : `admin123`
+### En Production
+- **6 utilisateurs** (1 admin, 2 gym_owner, 3clients)
+- **3 salles de sport**
+- **10 exercices**
+- **5 challenges actifs**
+- **8 participations** aux challenges
+- **3 badges** (Premier Défi, Champion, Guerrier)
+- **1 badge attribué** (à Nenou)
 
-Le script vérifie si un admin existe déjà pour éviter les doublons.
+### Classement Actuel
+1. 🥇 Nenou - 300 points (1 badge)
+2. 🥈 Kiki - 200 points
+3. 🥉 David - 0 points
 
-## Démarrer le serveur
+---
 
-```bash
-# Mode développement (compile + lance)
-npm run dev
+## Structure des Routes API
 
-# OU en 2 étapes
-npm run build
-npm start
-```
+### Légende des Permissions
 
-Le serveur démarre sur **http://localhost:3000**
+| Symbole | Signification | Description |
+|---------|--------------|-------------|
+| (public) | Accès public | Accessible sans authentification |
+| 🔒 | Authentifié | Token JWT requis |
+| 🔐 Admin | Administrateur | Réservé aux admins uniquement |
+| 🔒 GymOwner | Propriétaire | Réservé aux propriétaires de salles |
 
-## Compilation TypeScript
+---
 
-```bash
-# Compiler les fichiers .ts en .js dans dist/
-npm run build
-# OU directement
-npx tsc
-```
+### Auth
+- `POST /auth/register` - Inscription
+- `POST /auth/login` - Connexion
 
-## Qualité du code
+### Users
+- `GET /users` - Liste des utilisateurs 🔒
+- `GET /users/:id` - Détails utilisateur 🔒
+- `POST /users` - Créer utilisateur 🔐 Admin
+- `PATCH /users/:id` - Modifier profil 🔒
+- `DELETE /users/:id` - Désactiver compte 🔒
+- `PATCH /users/:id/activate` - Réactiver compte 🔐 Admin
 
-### Prettier (Formatage automatique)
+### Gyms
+- `GET /gyms` - Liste toutes les salles 🔒
+- `GET /gyms/approved` - Salles approuvées 🔒
+- `GET /gyms/pending` - Salles en attente 🔐 Admin
+- `GET /gyms/:id` - Détails salle 🔒
+- `POST /gyms` - Créer salle 🔒
+- `PATCH /gyms/:id` - Modifier salle 🔒
+- `PATCH /gyms/:id/status` - Approuver/refuser 🔐 Admin
+- `DELETE /gyms/:id` - Supprimer salle 🔒
 
-```bash
-# Formater tout le code
-npm run prettier
+### Exercises
+- `GET /exercises` - Liste exercices 🔒
+- `GET /exercises/difficulty/:level` - Par difficulté 🔒
+- `GET /exercises/:id` - Détails exercice 🔒
+- `POST /exercises` - Créer exercice 🔐 Admin
+- `PATCH /exercises/:id` - Modifier exercice 🔐 Admin
+- `DELETE /exercises/:id` - Supprimer exercice 🔐 Admin
 
-# Vérifier le formatage sans modifier
-npm run prettier:check
-```
+### Gym-Exercises
+- `GET /gym-exercises` - Toutes les relations 🔒
+- `GET /gym-exercises/gym/:gymId` - Exercices d'une salle 🔒
+- `POST /gym-exercises` - Lier exercice à salle 🔒
+- `DELETE /gym-exercises/:id` - Supprimer lien 🔒
 
-### ESLint (Analyse du code)
+### Challenges
+- `GET /challenges` - Challenges actifs (public)
+- `GET /challenges?difficulty=easy` - Filtre difficulté (public)
+- `GET /challenges?type=cardio` - Filtre type (public)
+- `GET /challenges?duration=30` - Filtre durée (public)
+- `GET /challenges/status/:status` - Par statut (public)
+- `GET /challenges/gym/:gymId` - Par salle (public)
+- `GET /challenges/:id` - Détails challenge (public)
+- `POST /challenges` - Créer challenge 🔒 GymOwner
+- `PATCH /challenges/:id` - Modifier challenge 🔒 GymOwner
+- `PATCH /challenges/:id/status` - Changer statut 🔒 GymOwner
+- `DELETE /challenges/:id` - Supprimer challenge 🔒 GymOwner
 
-```bash
-# Vérifier les erreurs et warnings
-npm run lint
+### Challenge Participants
+- `GET /challenge-participants` - Toutes les participations (public)
+- `GET /challenge-participants/challenge/:challengeId` - Par challenge (public)
+- `GET /challenge-participants/user/:userId` - Par utilisateur 🔒
+- `GET /challenge-participants/:id` - Détails participation (public)
+- `POST /challenge-participants/join` - Rejoindre challenge 🔒
+- `PATCH /challenge-participants/:id/progress` - Mettre à jour progression 🔒
+- `PATCH /challenge-participants/:id/status` - Changer statut 🔒
+- `PATCH /challenge-participants/:id/abandon` - Abandonner 🔒
+- `DELETE /challenge-participants/:id` - Supprimer participation 🔒
 
-# Corriger automatiquement ce qui peut l'être
-npm run lint:fix
-```
+### Badges
+- `GET /badges` - Liste tous les badges (public)
+- `GET /badges/category/:category` - Par catégorie (public)
+- `GET /badges/rarity/:rarity` - Par rareté (public)
+- `GET /badges/:id` - Détails badge (public)
+- `POST /badges` - Créer badge 🔐 Admin
+- `PATCH /badges/:id` - Modifier badge 🔐 Admin
+- `DELETE /badges/:id` - Supprimer badge 🔐 Admin
 
-**💡 Conseil :** Lance `npm run prettier && npm run lint` avant de commit
+### User Badges
+- `GET /user-badges/me` - Mes badges 🔒
+- `GET /user-badges/user/:userId` - Badges d'un utilisateur (public)
+- `GET /user-badges/check/:userId/:badgeId` - Vérifier possession (public)
+- `GET /user-badges/leaderboard` - Classement badges (public)
+- `POST /user-badges/award` - Attribuer badge 🔐 Admin
+- `DELETE /user-badges/revoke/:userId/:badgeId` - Révoquer badge 🔐 Admin
 
-## Tester l'API avec Postman
+### Stats
+- `GET /stats/me` - Mes statistiques 🔒
+- `GET /stats/user/:userId` - Stats utilisateur (public)
+- `GET /stats/leaderboard` - Classement général (public)
+- `GET /stats/global` - Stats globales plateforme (public)
 
-### Importer la collection
+---
 
-1. Ouvre Postman
-2. **Import** → **Upload Files**
-3. Sélectionne `TSPark.postman_collection.json`
-4. La collection apparaît avec toutes les routes organisées
+**Groupe :**
+- David
+- Iness
+- Killian
 
-### Utiliser la collection
-
-1. Lance d'abord **Login** ou **Register**
-2. Le token JWT est **automatiquement sauvegardé** dans les variables
-3. Toutes les autres routes utilisent ce token automatiquement
-4. Change la variable `baseUrl` pour pointer vers ton URL de prod quand tu déploies
-
-### Route de test rapide
-
-```bash
-curl http://localhost:3000
-# {"message":"TSPark API is running"}
-```
-
-## Base de données
-
-Visualiser le schéma sur https://dbdiagram.io/d/4IWA-NodeJs-TSpark-693bef3be877c6307496f75f
-
-## Variables d'environnement
-
-Fichier `.env` :
-
-```env
-PORT=3000
-MONGODB_URI=mongodb://tspark:tspark123@localhost:27017/tspark?authSource=admin
-```
-
-## Rôles utilisateurs
-
-- **admin** : Super administrateur
-- **gym_owner** : Propriétaire de salle de sport
-- **client** : Utilisateur client
-
-## Déploiement
-
-On déploiera sur sur **Render**
-Dadou s'en occupera la team 🫡 (ou sinon jvous laisse check comment ça marche)
+**Promotion :** 4IWA - 2025-2026
